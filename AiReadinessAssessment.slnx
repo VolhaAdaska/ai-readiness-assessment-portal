@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/AiReadinessAssessment.Api/AiReadinessAssessment.Api.csproj" Id="fdafca02-0dd7-4147-b104-f7d0d0192a83" />
+  <Project Path="src/AiReadinessAssessment.Application/AiReadinessAssessment.Application.csproj" Id="7abd3a0c-d0b1-4af3-8d88-641159c06489" />
+  <Project Path="src/AiReadinessAssessment.Domain/AiReadinessAssessment.Domain.csproj" />
+  <Project Path="src/AiReadinessAssessment.Infrastructure/AiReadinessAssessment.Infrastructure.csproj" Id="e6e34ea7-9568-4fdd-8b41-fa6c523eb25d" />
+  <Project Path="tests/AiReadinessAssessment.Application.Tests/AiReadinessAssessment.Application.Tests.csproj" Id="2406bf92-a3d6-489b-ba48-6511c68313a8" />
+  <Project Path="tests/AiReadinessAssessment.Domain.Tests/AiReadinessAssessment.Domain.Tests.csproj" Id="386b6d0f-abb4-4a6d-8daf-1438db782647" />
+</Solution>
