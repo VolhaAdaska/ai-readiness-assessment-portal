@@ -1,6 +1,6 @@
-namespace AiReadinessAssessment.Domain.InitialAssessment;
-
 using AiReadinessAssessment.Domain.Shared;
+
+namespace AiReadinessAssessment.Domain.InitialAssessment;
 
 /// <summary>
 /// Aggregate root representing a complete initial AI readiness assessment for an organization.
