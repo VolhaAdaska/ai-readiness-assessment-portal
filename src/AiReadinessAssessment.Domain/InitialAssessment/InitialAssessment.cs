@@ -78,6 +78,7 @@ public class InitialAssessment
 
     /// <summary>
     /// Starts the assessment, transitioning it from NotStarted to InProgress.
+    /// Initializes all six required category assessments.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if assessment is not in NotStarted status.</exception>
     public void Start()
@@ -88,21 +89,23 @@ public class InitialAssessment
 
         Status = AssessmentStatus.InProgress;
         StartedAt = DateTime.UtcNow;
+        
+        // Initialize all 6 required categories for this assessment
+        InitializeAllCategories();
     }
 
     /// <summary>
     /// Completes the assessment, transitioning it from InProgress to Completed.
+    /// All six categories must exist and be marked complete.
     /// </summary>
-    /// <exception cref="InvalidOperationException">Thrown if assessment is not in InProgress status or lacks required category assessments.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if assessment is not in InProgress status or validation fails.</exception>
     public void Complete()
     {
         if (Status != AssessmentStatus.InProgress)
             throw new InvalidOperationException(
                 $"Assessment can only be completed from InProgress status. Current status: {Status}");
 
-        if (_categoryAssessments.Count == 0)
-            throw new InvalidOperationException(
-                "Assessment must have at least one category assessment before completion.");
+        ValidateAllCategoriesAssessed();
 
         Status = AssessmentStatus.Completed;
         CompletedAt = DateTime.UtcNow;
@@ -217,9 +220,75 @@ public class InitialAssessment
         return (Status, targetStatus) switch
         {
             (AssessmentStatus.NotStarted, AssessmentStatus.InProgress) => true,
-            (AssessmentStatus.InProgress, AssessmentStatus.Completed) => _categoryAssessments.Count > 0,
+            (AssessmentStatus.InProgress, AssessmentStatus.Completed) => CanComplete(),
             (AssessmentStatus.Completed, AssessmentStatus.Archived) => true,
             _ => false
         };
+    }
+
+    /// <summary>
+    /// Initializes all six required category assessments for this assessment.
+    /// Each organization must assess all categories for AI readiness.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if categories have already been initialized.</exception>
+    private void InitializeAllCategories()
+    {
+        if (_categoryAssessments.Count > 0)
+            throw new InvalidOperationException("Categories have already been initialized for this assessment.");
+
+        var allCategories = Enum.GetValues(typeof(CategoryType))
+            .Cast<CategoryType>()
+            .ToList();
+
+        foreach (var category in allCategories)
+        {
+            var categoryAssessment = CategoryAssessment.Create(category);
+            _categoryAssessments.Add(categoryAssessment);
+        }
+    }
+
+    /// <summary>
+    /// Validates that all six assessment categories exist and are complete.
+    /// Called before assessment can be marked as Completed.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Thrown if validation fails.</exception>
+    private void ValidateAllCategoriesAssessed()
+    {
+        var allCategories = Enum.GetValues(typeof(CategoryType))
+            .Cast<CategoryType>()
+            .ToList();
+
+        // Check that all 6 categories are present
+        var missingCategories = allCategories
+            .Where(c => !_categoryAssessments.Any(ca => ca.Category == c))
+            .ToList();
+
+        if (missingCategories.Any())
+            throw new InvalidOperationException(
+                $"Assessment must include all categories before completion. Missing: {string.Join(", ", missingCategories)}");
+
+        // Check that all categories are marked complete
+        var incompleteCategories = _categoryAssessments
+            .Where(ca => !ca.IsComplete())
+            .Select(ca => ca.Category)
+            .ToList();
+
+        if (incompleteCategories.Any())
+            throw new InvalidOperationException(
+                $"All categories must be completed before assessment completion. Incomplete: {string.Join(", ", incompleteCategories)}");
+    }
+
+    /// <summary>
+    /// Checks if the assessment can be completed (used by CanTransitionTo for validation).
+    /// </summary>
+    /// <returns>True if all categories exist and are complete; otherwise false.</returns>
+    private bool CanComplete()
+    {
+        var allCategories = Enum.GetValues(typeof(CategoryType))
+            .Cast<CategoryType>()
+            .ToList();
+
+        return _categoryAssessments.Count == allCategories.Count &&
+               _categoryAssessments.All(ca => ca.IsComplete());
     }
 }

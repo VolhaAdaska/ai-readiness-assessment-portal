@@ -19,7 +19,8 @@ public class CategoryAssessment
     public CategoryType Category { get; private set; }
 
     /// <summary>
-    /// Maturity level (0-5) for this category; 0 = none, 5 = mature.
+    /// Maturity level (1-5) for this category; represents assessed capability level.
+    /// Note: Level must be > 0 to consider the category as "assessed and complete".
     /// </summary>
     public int MaturityLevel { get; private set; }
 
@@ -42,7 +43,7 @@ public class CategoryAssessment
     /// Creates a new category assessment for the specified category.
     /// </summary>
     /// <param name="category">The category type to assess.</param>
-    /// <returns>A new CategoryAssessment with maturity level 0.</returns>
+    /// <returns>A new CategoryAssessment with maturity level 0 (not yet assessed).</returns>
     public static CategoryAssessment Create(CategoryType category)
     {
         return new CategoryAssessment
@@ -57,8 +58,8 @@ public class CategoryAssessment
     /// <summary>
     /// Sets the maturity level for this category.
     /// </summary>
-    /// <param name="level">The maturity level (0-5).</param>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if level is outside 0-5 range.</exception>
+    /// <param name="level">The maturity level (1-5); represents capability level from basic to mature.</param>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if level is outside 1-5 range for assessed categories.</exception>
     public void SetMaturityLevel(int level)
     {
         if (level < 0 || level > 5)
@@ -101,7 +102,7 @@ public class CategoryAssessment
 
     /// <summary>
     /// Calculates the readiness score for this category (0-100).
-    /// Based primarily on maturity level; can be enhanced with response analysis.
+    /// Based primarily on maturity level (80%); response count contributes up to 20%.
     /// </summary>
     /// <returns>Score between 0 and 100.</returns>
     public double CalculateCategoryScore()
@@ -118,9 +119,10 @@ public class CategoryAssessment
 
     /// <summary>
     /// Checks if this category assessment is complete.
-    /// Complete means maturity level has been set and observations recorded.
+    /// Complete means: maturity level has been set to 1-5 (indicating assessed capability) and observations recorded.
+    /// A category with MaturityLevel = 0 is considered not yet assessed.
     /// </summary>
-    /// <returns>True if category is complete; otherwise false.</returns>
+    /// <returns>True if category is complete and assessed; otherwise false.</returns>
     public bool IsComplete()
     {
         return MaturityLevel > 0 && !string.IsNullOrWhiteSpace(Observations);
@@ -129,7 +131,7 @@ public class CategoryAssessment
     /// <summary>
     /// Gets the total number of responses recorded for this category.
     /// </summary>
-    /// <returns>The count of responses.</returns>
+    /// <returns>The count of question-answer responses.</returns>
     public int GetResponseCount()
     {
         return _responses.Count;
