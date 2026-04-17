@@ -16,6 +16,6 @@ public interface IRecommendationGenerator
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>List of generated recommendations for the assessment.</returns>
     Task<List<Recommendation>> GenerateRecommendationsAsync(
-        AiReadinessAssessment.Domain.InitialAssessment.InitialAssessment assessment,
+        AiReadinessAssessment.Domain.InitialAssessment.BaselineAssessment assessment,
         CancellationToken cancellationToken = default);
 }

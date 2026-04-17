@@ -6,7 +6,7 @@ namespace AiReadinessAssessment.Domain.InitialAssessment;
 /// Aggregate root representing a complete initial AI readiness assessment for an organization.
 /// Manages the lifecycle, category assessments, recommendations, and overall scoring.
 /// </summary>
-public class InitialAssessment
+public class BaselineAssessment
 {
     private readonly List<CategoryAssessment> _categoryAssessments = new();
     private readonly List<Recommendation> _recommendations = new();
@@ -51,7 +51,7 @@ public class InitialAssessment
     /// </summary>
     public IReadOnlyList<Recommendation> Recommendations => _recommendations.AsReadOnly();
 
-    private InitialAssessment()
+    private BaselineAssessment()
     {
         // EF Core requires parameterless constructor
     }
@@ -62,12 +62,12 @@ public class InitialAssessment
     /// <param name="organizationId">The organization being assessed.</param>
     /// <returns>A new InitialAssessment in NotStarted status.</returns>
     /// <exception cref="ArgumentException">Thrown if organizationId is empty.</exception>
-    public static InitialAssessment Create(Guid organizationId)
+    public static BaselineAssessment Create(Guid organizationId)
     {
         if (organizationId == Guid.Empty)
             throw new ArgumentException("Organization ID cannot be empty.", nameof(organizationId));
 
-        return new InitialAssessment
+        return new BaselineAssessment
         {
             Id = Guid.NewGuid(),
             OrganizationId = organizationId,

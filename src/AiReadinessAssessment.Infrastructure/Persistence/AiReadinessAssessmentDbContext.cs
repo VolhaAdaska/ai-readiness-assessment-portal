@@ -20,9 +20,9 @@ public class AiReadinessAssessmentDbContext : DbContext
     }
 
     /// <summary>
-    /// Gets or sets the InitialAssessments DbSet.
+    /// Gets or sets the Assessments DbSet.
     /// </summary>
-    public DbSet<InitialAssessment> InitialAssessments { get; set; } = null!;
+    public DbSet<BaselineAssessment> Assessments { get; set; } = null!;
 
     /// <summary>
     /// Configures the model for the database context.
@@ -33,10 +33,9 @@ public class AiReadinessAssessmentDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Apply all entity configurations
+        // Apply only the root entity configuration
+        // Nested owned entities (CategoryAssessment, AssessmentResponse, Recommendation)
+        // are already configured via OwnsMany() chains in InitialAssessmentConfiguration
         modelBuilder.ApplyConfiguration(new InitialAssessmentConfiguration());
-        modelBuilder.ApplyConfiguration(new CategoryAssessmentConfiguration());
-        modelBuilder.ApplyConfiguration(new AssessmentResponseConfiguration());
-        modelBuilder.ApplyConfiguration(new RecommendationConfiguration());
     }
 }

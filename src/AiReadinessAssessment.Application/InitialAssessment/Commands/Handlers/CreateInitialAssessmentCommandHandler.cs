@@ -1,6 +1,7 @@
 using AiReadinessAssessment.Application.Common.Abstractions;
 using AiReadinessAssessment.Application.InitialAssessment.Dtos.Responses;
 using AiReadinessAssessment.Application.InitialAssessment.Services;
+using AiReadinessAssessment.Domain.InitialAssessment;
 
 namespace AiReadinessAssessment.Application.InitialAssessment.Commands.Handlers;
 
@@ -32,7 +33,7 @@ public class CreateInitialAssessmentCommandHandler : ICommandHandler<CreateIniti
         CancellationToken cancellationToken = default)
     {
         // Create new assessment aggregate using factory method
-        var assessment = Domain.InitialAssessment.InitialAssessment.Create(command.OrganizationId);
+        var assessment = BaselineAssessment.Create(command.OrganizationId);
 
         // Persist to repository
         await _repository.AddAsync(assessment, cancellationToken);

@@ -36,7 +36,7 @@ public class StartInitialAssessmentCommandHandler : ICommandHandler<StartInitial
     {
         // Retrieve assessment
         var assessment = await _repository.GetByIdAsync(command.AssessmentId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.InitialAssessment), command.AssessmentId);
+            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), command.AssessmentId);
 
         // Start the assessment (domain validates status transition and initializes categories)
         assessment.Start();

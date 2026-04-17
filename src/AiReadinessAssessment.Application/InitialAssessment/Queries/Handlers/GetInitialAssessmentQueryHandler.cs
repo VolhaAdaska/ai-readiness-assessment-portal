@@ -36,7 +36,7 @@ public class GetInitialAssessmentQueryHandler : IQueryHandler<GetInitialAssessme
     {
         // Retrieve assessment with all related entities
         var assessment = await _repository.GetByIdAsync(query.AssessmentId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.InitialAssessment), query.AssessmentId);
+            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), query.AssessmentId);
 
         // Map category assessments to response DTOs
         var categoryResponses = assessment.CategoryAssessments

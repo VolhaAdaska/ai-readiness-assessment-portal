@@ -36,7 +36,7 @@ public class GetCategoryAssessmentQueryHandler : IQueryHandler<GetCategoryAssess
     {
         // Retrieve assessment
         var assessment = await _repository.GetByIdAsync(query.AssessmentId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.InitialAssessment), query.AssessmentId);
+            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), query.AssessmentId);
 
         // Find the category assessment
         var categoryAssessment = assessment.CategoryAssessments

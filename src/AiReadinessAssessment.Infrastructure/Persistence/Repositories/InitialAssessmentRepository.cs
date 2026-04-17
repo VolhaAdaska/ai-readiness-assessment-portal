@@ -27,9 +27,9 @@ public class InitialAssessmentRepository : IInitialAssessmentRepository
     /// <param name="assessment">The assessment to add.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task AddAsync(InitialAssessment assessment, CancellationToken cancellationToken = default)
+    public async Task AddAsync(BaselineAssessment assessment, CancellationToken cancellationToken = default)
     {
-        await _context.InitialAssessments.AddAsync(assessment, cancellationToken);
+        await _context.Assessments.AddAsync(assessment, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -39,9 +39,9 @@ public class InitialAssessmentRepository : IInitialAssessmentRepository
     /// <param name="assessment">The assessment to update.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public async Task UpdateAsync(InitialAssessment assessment, CancellationToken cancellationToken = default)
+    public async Task UpdateAsync(BaselineAssessment assessment, CancellationToken cancellationToken = default)
     {
-        _context.InitialAssessments.Update(assessment);
+        _context.Assessments.Update(assessment);
         await _context.SaveChangesAsync(cancellationToken);
     }
 
@@ -51,9 +51,9 @@ public class InitialAssessmentRepository : IInitialAssessmentRepository
     /// <param name="assessmentId">The assessment ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The assessment if found; null otherwise.</returns>
-    public async Task<InitialAssessment?> GetByIdAsync(Guid assessmentId, CancellationToken cancellationToken = default)
+    public async Task<BaselineAssessment?> GetByIdAsync(Guid assessmentId, CancellationToken cancellationToken = default)
     {
-        return await _context.InitialAssessments
+        return await _context.Assessments
             .Include(a => a.CategoryAssessments)
             .ThenInclude(c => c.Responses)
             .Include(a => a.Recommendations)
@@ -68,7 +68,7 @@ public class InitialAssessmentRepository : IInitialAssessmentRepository
     /// <returns>True if assessment exists; otherwise false.</returns>
     public async Task<bool> ExistsAsync(Guid assessmentId, CancellationToken cancellationToken = default)
     {
-        return await _context.InitialAssessments
+        return await _context.Assessments
             .AnyAsync(a => a.Id == assessmentId, cancellationToken);
     }
 }

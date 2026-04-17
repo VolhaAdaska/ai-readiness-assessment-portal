@@ -42,7 +42,7 @@ public class CompleteInitialAssessmentCommandHandler : ICommandHandler<CompleteI
     {
         // Retrieve assessment
         var assessment = await _repository.GetByIdAsync(command.AssessmentId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.InitialAssessment), command.AssessmentId);
+            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), command.AssessmentId);
 
         // Generate recommendations based on current assessment state
         var recommendations = await _recommendationGenerator.GenerateRecommendationsAsync(assessment, cancellationToken);

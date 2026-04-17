@@ -36,7 +36,7 @@ public class UpdateCategoryAssessmentCommandHandler : ICommandHandler<UpdateCate
     {
         // Retrieve assessment
         var assessment = await _repository.GetByIdAsync(command.AssessmentId, cancellationToken)
-            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.InitialAssessment), command.AssessmentId);
+            ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), command.AssessmentId);
 
         // Find the category assessment
         var categoryAssessment = assessment.CategoryAssessments

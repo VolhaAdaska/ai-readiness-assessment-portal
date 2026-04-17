@@ -8,16 +8,16 @@ namespace AiReadinessAssessment.Infrastructure.Persistence.Configurations;
 /// Entity Framework Core configuration for the InitialAssessment aggregate root.
 /// Configures the table structure, primary key, properties, enums, and owned entity relationships.
 /// </summary>
-public class InitialAssessmentConfiguration : IEntityTypeConfiguration<InitialAssessment>
+public class InitialAssessmentConfiguration : IEntityTypeConfiguration<BaselineAssessment>
 {
     /// <summary>
     /// Configures the InitialAssessment entity mapping.
     /// </summary>
     /// <param name="builder">The entity type builder.</param>
-    public void Configure(EntityTypeBuilder<InitialAssessment> builder)
+    public void Configure(EntityTypeBuilder<BaselineAssessment> builder)
     {
-        // Table mapping
-        builder.ToTable("InitialAssessments");
+        // Table mapping - clean, professional name
+        builder.ToTable("Assessments");
 
         // Primary key
         builder.HasKey(a => a.Id);
@@ -53,8 +53,10 @@ public class InitialAssessmentConfiguration : IEntityTypeConfiguration<InitialAs
             a => a.CategoryAssessments,
             navigationBuilder =>
             {
-                navigationBuilder.ToTable("InitialAssessments_CategoryAssessments");
-                navigationBuilder.HasKey("InitialAssessmentId", "Id");
+                navigationBuilder.ToTable("AssessmentCategories");
+                // Explicitly name the shadow FK to use AssessmentId instead of BaselineAssessmentId
+                navigationBuilder.WithOwner()
+                    .HasForeignKey("AssessmentId");
                 
                 navigationBuilder.Property(c => c.Id)
                     .HasColumnName("Id")
@@ -80,9 +82,11 @@ public class InitialAssessmentConfiguration : IEntityTypeConfiguration<InitialAs
                     c => c.Responses,
                     responseBuilder =>
                     {
-                        responseBuilder.ToTable("InitialAssessments_CategoryAssessments_Responses");
-                        responseBuilder.HasKey("InitialAssessmentId", "CategoryAssessmentId", "Id");
-
+                        responseBuilder.ToTable("AssessmentResponses");
+                        // Explicitly name the shadow FKs
+                        responseBuilder.WithOwner()
+                            .HasForeignKey("AssessmentId", "CategoryAssessmentId");
+                        
                         responseBuilder.Property(r => r.Id)
                             .HasColumnName("Id")
                             .ValueGeneratedNever();
@@ -107,9 +111,11 @@ public class InitialAssessmentConfiguration : IEntityTypeConfiguration<InitialAs
             a => a.Recommendations,
             navigationBuilder =>
             {
-                navigationBuilder.ToTable("InitialAssessments_Recommendations");
-                navigationBuilder.HasKey("InitialAssessmentId", "Id");
-
+                navigationBuilder.ToTable("Recommendations");
+                // Explicitly name the shadow FK to use AssessmentId instead of BaselineAssessmentId
+                navigationBuilder.WithOwner()
+                    .HasForeignKey("AssessmentId");
+                
                 navigationBuilder.Property(r => r.Id)
                     .HasColumnName("Id")
                     .ValueGeneratedNever();
