@@ -5,7 +5,7 @@ import { Button } from '../components/common/Button';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
 import { assessmentApi } from '../api/client';
-import { AssessmentStatus, getAssessmentStatusLabel, getReadinessLevelLabel } from '../types/assessment';
+import { AssessmentStatus, getAssessmentStatusLabel, getDashboardReadinessLabel } from '../types/assessment';
 import type { AssessmentSummary } from '../types/assessment';
 
 export const Dashboard: React.FC = () => {
@@ -80,6 +80,7 @@ export const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {assessments.map((assessment) => {
             const isCompleted = assessment.status === AssessmentStatus.Completed;
+            const organizationName = assessment.organizationName?.trim();
 
             return (
               <Card key={assessment.assessmentId}>
@@ -96,7 +97,12 @@ export const Dashboard: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
                     <div>
                       <p className="text-gray-500">Organization</p>
-                      <p className="font-medium text-gray-900 break-all">{assessment.organizationId}</p>
+                      <p className="font-medium text-gray-900 break-all">
+                        {organizationName || 'Organization unavailable'}
+                      </p>
+                      {!organizationName && (
+                        <p className="text-xs text-gray-500 break-all mt-1">ID: {assessment.organizationId}</p>
+                      )}
                     </div>
                     <div>
                       <p className="text-gray-500">Created</p>
@@ -107,9 +113,7 @@ export const Dashboard: React.FC = () => {
                     <div>
                       <p className="text-gray-500">Readiness Level</p>
                       <p className="font-medium text-gray-900">
-                        {assessment.readinessLevel === undefined
-                          ? 'In Progress'
-                          : getReadinessLevelLabel(assessment.readinessLevel)}
+                        {getDashboardReadinessLabel(assessment.readinessLevel)}
                       </p>
                     </div>
                     <div>

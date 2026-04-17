@@ -3,6 +3,7 @@ using System;
 using AiReadinessAssessment.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AiReadinessAssessment.Infrastructure.Migrations
 {
     [DbContext(typeof(AiReadinessAssessmentDbContext))]
-    partial class AiReadinessAssessmentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260417160721_AddOrganizations")]
+    partial class AddOrganizations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.0");

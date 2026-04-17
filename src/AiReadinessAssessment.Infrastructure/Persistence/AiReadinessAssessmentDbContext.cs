@@ -1,4 +1,5 @@
 using AiReadinessAssessment.Domain.InitialAssessment;
+using AiReadinessAssessment.Domain.Organization;
 using AiReadinessAssessment.Infrastructure.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +26,11 @@ public class AiReadinessAssessmentDbContext : DbContext
     public DbSet<BaselineAssessment> Assessments { get; set; } = null!;
 
     /// <summary>
+    /// Gets or sets the Organizations DbSet.
+    /// </summary>
+    public DbSet<Organization> Organizations { get; set; } = null!;
+
+    /// <summary>
     /// Configures the model for the database context.
     /// Applies all entity type configurations.
     /// </summary>
@@ -37,5 +43,6 @@ public class AiReadinessAssessmentDbContext : DbContext
         // Nested owned entities (CategoryAssessment, AssessmentResponse, Recommendation)
         // are already configured via OwnsMany() chains in InitialAssessmentConfiguration
         modelBuilder.ApplyConfiguration(new InitialAssessmentConfiguration());
+        modelBuilder.ApplyConfiguration(new OrganizationConfiguration());
     }
 }

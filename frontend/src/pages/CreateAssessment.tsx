@@ -1,21 +1,42 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/common/Card';
 import { Button } from '../components/common/Button';
-import { Form, FormField, Input } from '../components/common/Form';
+import { Form, FormField, Input, Select } from '../components/common/Form';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
-import { assessmentApi } from '../api/client';
-
-const GUID_REGEX =
-  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+import { assessmentApi, organizationApi } from '../api/client';
+import type { Organization } from '../types/organization';
 
 export const CreateAssessment: React.FC = () => {
   const [assessmentName, setAssessmentName] = useState('');
   const [organizationId, setOrganizationId] = useState('');
+  const [organizations, setOrganizations] = useState<Organization[]>([]);
+  const [organizationsLoading, setOrganizationsLoading] = useState(true);
+  const [organizationsError, setOrganizationsError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loadOrganizations = async () => {
+      try {
+        const response = await organizationApi.list();
+        setOrganizations(response);
+
+        if (response.length > 0) {
+          setOrganizationId(response[0].id);
+        }
+      } catch (err) {
+        const message = err instanceof globalThis.Error ? err.message : 'Failed to load organizations';
+        setOrganizationsError(message);
+      } finally {
+        setOrganizationsLoading(false);
+      }
+    };
+
+    loadOrganizations();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,12 +46,7 @@ export const CreateAssessment: React.FC = () => {
     }
 
     if (!organizationId.trim()) {
-      setError('Organization ID is required');
-      return;
-    }
-
-    if (!GUID_REGEX.test(organizationId.trim())) {
-      setError('Organization ID must be a valid GUID');
+      setError('Please select an organization');
       return;
     }
 
@@ -59,6 +75,23 @@ export const CreateAssessment: React.FC = () => {
         </CardHeader>
         <CardContent>
           {error && <Error message={error} className="mb-4" />}
+
+          {organizationsError && <Error message={organizationsError} className="mb-4" />}
+
+          {organizationsLoading ? (
+            <div className="py-6">
+              <Loading />
+            </div>
+          ) : organizations.length === 0 ? (
+            <div className="space-y-3 rounded-md border border-dashed border-gray-300 p-4">
+              <p className="text-sm text-gray-700">
+                No organizations are available. Create an organization before starting an assessment.
+              </p>
+              <Link to="/organizations">
+                <Button type="button">Go to Organizations</Button>
+              </Link>
+            </div>
+          ) : (
           <Form onSubmit={handleSubmit}>
             <FormField label="Assessment Name">
               <Input
@@ -70,12 +103,14 @@ export const CreateAssessment: React.FC = () => {
                 required
               />
             </FormField>
-            <FormField label="Organization ID">
-              <Input
-                type="text"
+            <FormField label="Organization">
+              <Select
                 value={organizationId}
                 onChange={(e) => setOrganizationId(e.target.value)}
-                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                options={organizations.map((organization) => ({
+                  value: organization.id,
+                  label: organization.name,
+                }))}
                 required
               />
             </FormField>
@@ -88,6 +123,7 @@ export const CreateAssessment: React.FC = () => {
               </Button>
             </div>
           </Form>
+          )}
         </CardContent>
       </Card>
     </div>

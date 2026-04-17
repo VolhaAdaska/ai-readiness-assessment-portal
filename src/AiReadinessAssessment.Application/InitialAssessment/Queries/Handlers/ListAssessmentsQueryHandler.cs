@@ -1,6 +1,7 @@
 using AiReadinessAssessment.Application.Common.Abstractions;
 using AiReadinessAssessment.Application.InitialAssessment.Dtos.Responses;
 using AiReadinessAssessment.Application.InitialAssessment.Services;
+using AiReadinessAssessment.Application.Organization.Services;
 using AiReadinessAssessment.Domain.InitialAssessment;
 
 namespace AiReadinessAssessment.Application.InitialAssessment.Queries.Handlers;
@@ -12,14 +13,19 @@ namespace AiReadinessAssessment.Application.InitialAssessment.Queries.Handlers;
 public class ListAssessmentsQueryHandler : IQueryHandler<ListAssessmentsQuery, List<AssessmentSummaryResponse>>
 {
     private readonly IInitialAssessmentRepository _repository;
+    private readonly IOrganizationRepository _organizationRepository;
 
     /// <summary>
     /// Initializes a new instance of the ListAssessmentsQueryHandler class.
     /// </summary>
     /// <param name="repository">The assessment repository.</param>
-    public ListAssessmentsQueryHandler(IInitialAssessmentRepository repository)
+    /// <param name="organizationRepository">The organization repository.</param>
+    public ListAssessmentsQueryHandler(
+        IInitialAssessmentRepository repository,
+        IOrganizationRepository organizationRepository)
     {
         _repository = repository;
+        _organizationRepository = organizationRepository;
     }
 
     /// <summary>
@@ -33,14 +39,20 @@ public class ListAssessmentsQueryHandler : IQueryHandler<ListAssessmentsQuery, L
         CancellationToken cancellationToken = default)
     {
         var assessments = await _repository.GetAllAsync(cancellationToken);
+        var organizations = await _organizationRepository.GetAllAsync(cancellationToken);
+
+        // Build a lookup to avoid repeated searches — single pass, O(1) per assessment
+        var organizationNames = organizations.ToDictionary(o => o.Id, o => o.Name);
 
         return assessments
             .OrderByDescending(a => a.CreatedAt)
-            .Select(a => MapToSummary(a))
+            .Select(a => MapToSummary(a, organizationNames))
             .ToList();
     }
 
-    private static AssessmentSummaryResponse MapToSummary(BaselineAssessment assessment)
+    private static AssessmentSummaryResponse MapToSummary(
+        BaselineAssessment assessment,
+        Dictionary<Guid, string> organizationNames)
     {
         var totalCategories = assessment.CategoryAssessments.Count;
         var completedCategories = assessment.CategoryAssessments.Count(c => c.IsComplete());
@@ -54,6 +66,7 @@ public class ListAssessmentsQueryHandler : IQueryHandler<ListAssessmentsQuery, L
         {
             AssessmentId = assessment.Id,
             OrganizationId = assessment.OrganizationId,
+            OrganizationName = organizationNames.GetValueOrDefault(assessment.OrganizationId, string.Empty),
             Status = assessment.Status,
             CreatedAt = assessment.CreatedAt,
             StartedAt = assessment.StartedAt,

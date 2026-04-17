@@ -20,6 +20,12 @@ public class AssessmentSummaryResponse
     public Guid OrganizationId { get; set; }
 
     /// <summary>
+    /// Display name of the organisation this assessment belongs to.
+    /// Empty string if the organisation record cannot be found.
+    /// </summary>
+    public string OrganizationName { get; set; } = string.Empty;
+
+    /// <summary>
     /// Current lifecycle status of the assessment.
     /// </summary>
     public AssessmentStatus Status { get; set; }

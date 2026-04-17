@@ -4,8 +4,13 @@ using AiReadinessAssessment.Application.InitialAssessment.Commands.Handlers;
 using AiReadinessAssessment.Application.InitialAssessment.Dtos.Responses;
 using AiReadinessAssessment.Application.InitialAssessment.Queries;
 using AiReadinessAssessment.Application.InitialAssessment.Queries.Handlers;
-using Microsoft.Extensions.DependencyInjection;
 using AiReadinessAssessment.Application.InitialAssessment.Services;
+using AiReadinessAssessment.Application.Organization.Commands;
+using AiReadinessAssessment.Application.Organization.Commands.Handlers;
+using AiReadinessAssessment.Application.Organization.Dtos.Responses;
+using AiReadinessAssessment.Application.Organization.Queries;
+using AiReadinessAssessment.Application.Organization.Queries.Handlers;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AiReadinessAssessment.Application;
 
@@ -35,6 +40,10 @@ public static class DependencyInjection
         services.AddScoped<IQueryHandler<GetInitialAssessmentQuery, InitialAssessmentResponse>, GetInitialAssessmentQueryHandler>();
         services.AddScoped<IQueryHandler<GetCategoryAssessmentQuery, CategoryAssessmentResponse>, GetCategoryAssessmentQueryHandler>();
         services.AddScoped<IQueryHandler<ListAssessmentsQuery, List<AssessmentSummaryResponse>>, ListAssessmentsQueryHandler>();
+
+        // Organization handlers
+        services.AddScoped<ICommandHandler<CreateOrganizationCommand, OrganizationResponse>, CreateOrganizationCommandHandler>();
+        services.AddScoped<IQueryHandler<ListOrganizationsQuery, List<OrganizationResponse>>, ListOrganizationsQueryHandler>();
 
         return services;
     }

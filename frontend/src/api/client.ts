@@ -1,6 +1,7 @@
 import {
   CategoryType,
 } from '../types/assessment';
+import type { CreateOrganizationRequest, Organization } from '../types/organization';
 import type {
   Assessment,
   AssessmentSummary,
@@ -84,6 +85,19 @@ export const assessmentApi = {
   complete: async (id: string): Promise<CompleteAssessmentResponse> => {
     return request<CompleteAssessmentResponse>(`/assessments/${id}/complete`, {
       method: 'POST',
+    });
+  },
+};
+
+export const organizationApi = {
+  list: async (): Promise<Organization[]> => {
+    return request<Organization[]>('/organizations');
+  },
+
+  create: async (payload: CreateOrganizationRequest): Promise<Organization> => {
+    return request<Organization>('/organizations', {
+      method: 'POST',
+      body: JSON.stringify(payload),
     });
   },
 };

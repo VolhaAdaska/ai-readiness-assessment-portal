@@ -5,6 +5,7 @@ import { CreateAssessment } from './pages/CreateAssessment';
 import { AssessmentDetails } from './pages/AssessmentDetails';
 import { EditCategory } from './pages/EditCategory';
 import { Completion } from './pages/Completion';
+import { Organizations } from './pages/Organizations';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/organizations" element={<Organizations />} />
           <Route path="/create" element={<CreateAssessment />} />
           <Route path="/assessment/:id" element={<AssessmentDetails />} />
           <Route path="/assessment/:id/category/:category" element={<EditCategory />} />

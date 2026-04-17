@@ -1,4 +1,5 @@
 using AiReadinessAssessment.Application.InitialAssessment.Services;
+using AiReadinessAssessment.Application.Organization.Services;
 using AiReadinessAssessment.Infrastructure.Persistence;
 using AiReadinessAssessment.Infrastructure.Persistence.Repositories;
 using AiReadinessAssessment.Infrastructure.Services;
@@ -31,6 +32,7 @@ public static class DependencyInjection
 
         // Register repositories
         services.AddScoped<IInitialAssessmentRepository, InitialAssessmentRepository>();
+        services.AddScoped<IOrganizationRepository, OrganizationRepository>();
 
         // Register application services
         services.AddScoped<IRecommendationGenerator, RuleBasedRecommendationGenerator>();

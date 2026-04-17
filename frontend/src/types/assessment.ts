@@ -68,6 +68,27 @@ export function getReadinessLevelLabel(level: ReadinessLevel): string {
   return readinessLevelLabels[level] ?? `Level ${level}`;
 }
 
+export function getDashboardReadinessLabel(level?: ReadinessLevel): string {
+  if (level === undefined) {
+    return 'Not assessed yet';
+  }
+
+  switch (level) {
+    case ReadinessLevel.Critical:
+      return 'Low';
+    case ReadinessLevel.Low:
+      return 'Emerging';
+    case ReadinessLevel.Moderate:
+      return 'Moderate';
+    case ReadinessLevel.Good:
+      return 'High';
+    case ReadinessLevel.Excellent:
+      return 'Advanced';
+    default:
+      return 'Not assessed yet';
+  }
+}
+
 export const Priority = {
   Critical: 0,
   High: 1,
@@ -163,6 +184,7 @@ export interface CompleteAssessmentResponse {
 export interface AssessmentSummary {
   assessmentId: string;
   organizationId: string;
+  organizationName: string;
   status: AssessmentStatus;
   createdAt: string;
   startedAt?: string;
