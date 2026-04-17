@@ -71,4 +71,15 @@ public class InitialAssessmentRepository : IInitialAssessmentRepository
         return await _context.Assessments
             .AnyAsync(a => a.Id == assessmentId, cancellationToken);
     }
+
+    /// <summary>
+    /// Retrieves all assessments with category assessments for dashboard listing.
+    /// Responses and Recommendations are not loaded — not required for the summary view.
+    /// </summary>
+    public async Task<List<BaselineAssessment>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Assessments
+            .Include(a => a.CategoryAssessments)
+            .ToListAsync(cancellationToken);
+    }
 }

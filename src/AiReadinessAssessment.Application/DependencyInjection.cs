@@ -34,6 +34,7 @@ public static class DependencyInjection
         // Register query handlers
         services.AddScoped<IQueryHandler<GetInitialAssessmentQuery, InitialAssessmentResponse>, GetInitialAssessmentQueryHandler>();
         services.AddScoped<IQueryHandler<GetCategoryAssessmentQuery, CategoryAssessmentResponse>, GetCategoryAssessmentQueryHandler>();
+        services.AddScoped<IQueryHandler<ListAssessmentsQuery, List<AssessmentSummaryResponse>>, ListAssessmentsQueryHandler>();
 
         return services;
     }

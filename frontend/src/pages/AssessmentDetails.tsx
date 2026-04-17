@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/common/C
 import { Button } from '../components/common/Button';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
-import { AssessmentStatus, getCategoryTypeLabel } from '../types/assessment';
+import { AssessmentStatus, getAssessmentStatusLabel, getCategoryTypeLabel } from '../types/assessment';
 import type { Assessment } from '../types/assessment';
 import { assessmentApi } from '../api/client';
 
@@ -78,7 +78,7 @@ export const AssessmentDetails: React.FC = () => {
             </div>
             <div>
               <p className="text-sm text-gray-600">Status</p>
-              <p className="font-medium">{assessment.status}</p>
+              <p className="font-medium">{getAssessmentStatusLabel(assessment.status)}</p>
             </div>
             <div>
               <p className="text-sm text-gray-600">Created</p>

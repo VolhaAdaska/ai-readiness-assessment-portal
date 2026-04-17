@@ -23,6 +23,7 @@ public class AssessmentsController : ControllerBase
     private readonly ICommandHandler<CompleteInitialAssessmentCommand, CompleteAssessmentResponse> _completeHandler;
     private readonly IQueryHandler<GetInitialAssessmentQuery, InitialAssessmentResponse> _getAssessmentHandler;
     private readonly IQueryHandler<GetCategoryAssessmentQuery, CategoryAssessmentResponse> _getCategoryHandler;
+    private readonly IQueryHandler<ListAssessmentsQuery, List<AssessmentSummaryResponse>> _listAssessmentsHandler;
 
     /// <summary>
     /// Initializes a new instance of the AssessmentsController class.
@@ -33,7 +34,8 @@ public class AssessmentsController : ControllerBase
         ICommandHandler<UpdateCategoryAssessmentCommand, UpdateCategoryAssessmentResponse> updateCategoryHandler,
         ICommandHandler<CompleteInitialAssessmentCommand, CompleteAssessmentResponse> completeHandler,
         IQueryHandler<GetInitialAssessmentQuery, InitialAssessmentResponse> getAssessmentHandler,
-        IQueryHandler<GetCategoryAssessmentQuery, CategoryAssessmentResponse> getCategoryHandler)
+        IQueryHandler<GetCategoryAssessmentQuery, CategoryAssessmentResponse> getCategoryHandler,
+        IQueryHandler<ListAssessmentsQuery, List<AssessmentSummaryResponse>> listAssessmentsHandler)
     {
         _createHandler = createHandler;
         _startHandler = startHandler;
@@ -41,6 +43,7 @@ public class AssessmentsController : ControllerBase
         _completeHandler = completeHandler;
         _getAssessmentHandler = getAssessmentHandler;
         _getCategoryHandler = getCategoryHandler;
+        _listAssessmentsHandler = listAssessmentsHandler;
     }
 
     /// <summary>
@@ -157,6 +160,20 @@ public class AssessmentsController : ControllerBase
     {
         var query = new GetCategoryAssessmentQuery(id, category);
         var response = await _getCategoryHandler.Handle(query, cancellationToken);
+        return Ok(response);
+    }
+
+    /// <summary>
+    /// Retrieves a summary list of all assessments for the dashboard.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of assessment summaries ordered by creation date descending.</returns>
+    /// <response code="200">Assessments retrieved successfully.</response>
+    [HttpGet]
+    public async Task<ActionResult<List<AssessmentSummaryResponse>>> ListAssessments(
+        CancellationToken cancellationToken)
+    {
+        var response = await _listAssessmentsHandler.Handle(new ListAssessmentsQuery(), cancellationToken);
         return Ok(response);
     }
 }

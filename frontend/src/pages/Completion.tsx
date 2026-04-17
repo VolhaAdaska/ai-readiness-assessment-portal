@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/common/C
 import { Button } from '../components/common/Button';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
-import { ReadinessLevel } from '../types/assessment';
+import { ReadinessLevel, getCategoryTypeLabel, getPriorityLabel, getReadinessLevelLabel, Priority } from '../types/assessment';
 import type { Assessment, ReadinessLevel as ReadinessLevelType } from '../types/assessment';
 import { assessmentApi } from '../api/client';
 
@@ -67,7 +67,9 @@ export const Completion: React.FC = () => {
               {assessment.overallScore}%
             </div>
             <div className={`text-xl font-semibold ${getReadinessColor(assessment.readinessLevel ?? ReadinessLevel.Critical)}`}>
-              {assessment.readinessLevel ?? 'Not Classified'}
+              {assessment.readinessLevel === undefined
+                ? 'Not Classified'
+                : getReadinessLevelLabel(assessment.readinessLevel)}
             </div>
           </div>
         </CardContent>
@@ -101,15 +103,16 @@ export const Completion: React.FC = () => {
                   <div className="flex items-center justify-between mb-1">
                     <h4 className="text-sm font-medium">{rec.title}</h4>
                     <span className={`px-2 py-1 text-xs rounded ${
-                      rec.priority === 'Critical' ? 'bg-red-100 text-red-800' :
-                      rec.priority === 'High' ? 'bg-orange-100 text-orange-800' :
-                      'bg-yellow-100 text-yellow-800'
+                      rec.priority === Priority.Critical ? 'bg-red-100 text-red-800' :
+                      rec.priority === Priority.High ? 'bg-orange-100 text-orange-800' :
+                      rec.priority === Priority.Medium ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-gray-100 text-gray-700'
                     }`}>
-                      {rec.priority}
+                      {getPriorityLabel(rec.priority)}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">{rec.description}</p>
-                  <p className="text-xs text-gray-500 mt-1">Category: {rec.category}</p>
+                  <p className="text-xs text-gray-500 mt-1">Category: {getCategoryTypeLabel(rec.category)}</p>
                 </div>
               ))}
             </div>

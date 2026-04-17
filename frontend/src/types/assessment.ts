@@ -27,32 +27,66 @@ export function getCategoryTypeLabel(category: CategoryType): string {
 }
 
 export const AssessmentStatus = {
-  NotStarted: 'NotStarted',
-  InProgress: 'InProgress',
-  Completed: 'Completed',
-  Archived: 'Archived',
+  NotStarted: 0,
+  InProgress: 1,
+  Completed: 2,
+  Archived: 3,
 } as const;
 
 export type AssessmentStatus = (typeof AssessmentStatus)[keyof typeof AssessmentStatus];
 
+export const assessmentStatusLabels: Record<AssessmentStatus, string> = {
+  [AssessmentStatus.NotStarted]: 'Not Started',
+  [AssessmentStatus.InProgress]: 'In Progress',
+  [AssessmentStatus.Completed]: 'Completed',
+  [AssessmentStatus.Archived]: 'Archived',
+};
+
+export function getAssessmentStatusLabel(status: AssessmentStatus): string {
+  return assessmentStatusLabels[status] ?? `Status ${status}`;
+}
+
 export const ReadinessLevel = {
-  Critical: 'Critical',
-  Low: 'Low',
-  Moderate: 'Moderate',
-  Good: 'Good',
-  Excellent: 'Excellent',
+  Critical: 0,
+  Low: 1,
+  Moderate: 2,
+  Good: 3,
+  Excellent: 4,
 } as const;
 
 export type ReadinessLevel = (typeof ReadinessLevel)[keyof typeof ReadinessLevel];
 
+export const readinessLevelLabels: Record<ReadinessLevel, string> = {
+  [ReadinessLevel.Critical]: 'Critical',
+  [ReadinessLevel.Low]: 'Low',
+  [ReadinessLevel.Moderate]: 'Moderate',
+  [ReadinessLevel.Good]: 'Good',
+  [ReadinessLevel.Excellent]: 'Excellent',
+};
+
+export function getReadinessLevelLabel(level: ReadinessLevel): string {
+  return readinessLevelLabels[level] ?? `Level ${level}`;
+}
+
 export const Priority = {
-  Critical: 'Critical',
-  High: 'High',
-  Medium: 'Medium',
-  Low: 'Low',
+  Critical: 0,
+  High: 1,
+  Medium: 2,
+  Low: 3,
 } as const;
 
 export type Priority = (typeof Priority)[keyof typeof Priority];
+
+export const priorityLabels: Record<Priority, string> = {
+  [Priority.Critical]: 'Critical',
+  [Priority.High]: 'High',
+  [Priority.Medium]: 'Medium',
+  [Priority.Low]: 'Low',
+};
+
+export function getPriorityLabel(priority: Priority): string {
+  return priorityLabels[priority] ?? `Priority ${priority}`;
+}
 
 export interface CategoryAssessment {
   id: string;
@@ -124,4 +158,18 @@ export interface CompleteAssessmentResponse {
   readinessLevel: ReadinessLevel;
   categoryScores: Record<CategoryType, number>;
   recommendationCount: number;
+}
+
+export interface AssessmentSummary {
+  assessmentId: string;
+  organizationId: string;
+  status: AssessmentStatus;
+  createdAt: string;
+  startedAt?: string;
+  completedAt?: string;
+  readinessLevel?: ReadinessLevel;
+  overallScore?: number;
+  totalCategories: number;
+  completedCategories: number;
+  completionPercentage: number;
 }

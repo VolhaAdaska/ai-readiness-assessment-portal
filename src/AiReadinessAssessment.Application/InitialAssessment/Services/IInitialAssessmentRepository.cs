@@ -14,7 +14,7 @@ public interface IInitialAssessmentRepository
     /// <param name="assessment">The assessment to add.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task AddAsync(AiReadinessAssessment.Domain.InitialAssessment.BaselineAssessment assessment, CancellationToken cancellationToken = default);
+    Task AddAsync(BaselineAssessment assessment, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Updates an existing assessment in the repository.
@@ -22,7 +22,7 @@ public interface IInitialAssessmentRepository
     /// <param name="assessment">The assessment to update.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task UpdateAsync(AiReadinessAssessment.Domain.InitialAssessment.BaselineAssessment assessment, CancellationToken cancellationToken = default);
+    Task UpdateAsync(BaselineAssessment assessment, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Retrieves an assessment by ID.
@@ -30,7 +30,7 @@ public interface IInitialAssessmentRepository
     /// <param name="assessmentId">The assessment ID.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The assessment if found; null otherwise.</returns>
-    Task<AiReadinessAssessment.Domain.InitialAssessment.BaselineAssessment?> GetByIdAsync(Guid assessmentId, CancellationToken cancellationToken = default);
+    Task<BaselineAssessment?> GetByIdAsync(Guid assessmentId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Checks if an assessment exists.
@@ -39,4 +39,11 @@ public interface IInitialAssessmentRepository
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>True if assessment exists; otherwise false.</returns>
     Task<bool> ExistsAsync(Guid assessmentId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Retrieves all assessments with their category assessments for dashboard listing.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>List of all assessments ordered by creation date.</returns>
+    Task<List<BaselineAssessment>> GetAllAsync(CancellationToken cancellationToken = default);
 }
