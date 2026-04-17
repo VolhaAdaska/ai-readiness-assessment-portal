@@ -5,7 +5,7 @@ import { Button } from '../components/common/Button';
 import { Form, FormField, Select, Textarea } from '../components/common/Form';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
-import { CategoryType } from '../types/assessment';
+import { getCategoryTypeLabel, isCategoryType } from '../types/assessment';
 import type { CategoryAssessment } from '../types/assessment';
 import { assessmentApi } from '../api/client';
 
@@ -22,17 +22,19 @@ export const EditCategory: React.FC = () => {
   useEffect(() => {
     if (!id || !category) return;
 
+    const parsedCategory = Number(category);
+    if (!Number.isInteger(parsedCategory) || !isCategoryType(parsedCategory)) {
+      setError('Invalid category');
+      setLoading(false);
+      return;
+    }
+
     const fetchCategory = async () => {
       try {
-        const assessment = await assessmentApi.get(id);
-        const cat = assessment.categories.find(c => c.category === category);
-        if (cat) {
-          setCategoryData(cat);
-          setMaturityLevel(cat.maturityLevel);
-          setObservations(cat.observations);
-        } else {
-          setError('Category not found');
-        }
+        const cat = await assessmentApi.getCategory(id, parsedCategory);
+        setCategoryData(cat);
+        setMaturityLevel(cat.maturityLevel);
+        setObservations(cat.observations);
       } catch (err) {
         setError('Failed to load category');
       } finally {
@@ -47,11 +49,17 @@ export const EditCategory: React.FC = () => {
     e.preventDefault();
     if (!id || !category) return;
 
+    const parsedCategory = Number(category);
+    if (!Number.isInteger(parsedCategory) || !isCategoryType(parsedCategory)) {
+      setError('Invalid category');
+      return;
+    }
+
     setSaving(true);
     setError(null);
 
     try {
-      await assessmentApi.updateCategory(id, category as CategoryType, {
+      await assessmentApi.updateCategory(id, parsedCategory, {
         maturityLevel,
         observations,
       });
@@ -80,7 +88,7 @@ export const EditCategory: React.FC = () => {
     <div className="max-w-2xl mx-auto">
       <Card>
         <CardHeader>
-          <CardTitle>Assess {categoryData.category}</CardTitle>
+          <CardTitle>Assess {getCategoryTypeLabel(categoryData.category)}</CardTitle>
         </CardHeader>
         <CardContent>
           {error && <Error message={error} className="mb-4" />}

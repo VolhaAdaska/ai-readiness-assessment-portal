@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../components/common/C
 import { Button } from '../components/common/Button';
 import { Loading } from '../components/common/Loading';
 import { Error } from '../components/common/Error';
-import { AssessmentStatus } from '../types/assessment';
+import { AssessmentStatus, getCategoryTypeLabel } from '../types/assessment';
 import type { Assessment } from '../types/assessment';
 import { assessmentApi } from '../api/client';
 
@@ -101,7 +101,7 @@ export const AssessmentDetails: React.FC = () => {
             <Card key={category.category}>
               <CardHeader>
                 <CardTitle className="flex justify-between items-center">
-                  {category.category}
+                  {getCategoryTypeLabel(category.category)}
                   <span className={`px-2 py-1 text-xs rounded ${
                     category.isComplete ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                   }`}>

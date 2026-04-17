@@ -1,13 +1,30 @@
 export const CategoryType = {
-  Data: 'Data',
-  Technology: 'Technology',
-  Process: 'Process',
-  Security: 'Security',
-  Governance: 'Governance',
-  TeamCapabilities: 'TeamCapabilities',
+  Data: 0,
+  Technology: 1,
+  Process: 2,
+  Security: 3,
+  Governance: 4,
+  TeamCapabilities: 5,
 } as const;
 
 export type CategoryType = (typeof CategoryType)[keyof typeof CategoryType];
+
+export const categoryTypeLabels: Record<CategoryType, string> = {
+  [CategoryType.Data]: 'Data',
+  [CategoryType.Technology]: 'Technology',
+  [CategoryType.Process]: 'Process',
+  [CategoryType.Security]: 'Security',
+  [CategoryType.Governance]: 'Governance',
+  [CategoryType.TeamCapabilities]: 'Team Capabilities',
+};
+
+export function isCategoryType(value: number): value is CategoryType {
+  return Object.values(CategoryType).includes(value as CategoryType);
+}
+
+export function getCategoryTypeLabel(category: CategoryType): string {
+  return categoryTypeLabels[category] ?? `Category ${category}`;
+}
 
 export const AssessmentStatus = {
   NotStarted: 'NotStarted',

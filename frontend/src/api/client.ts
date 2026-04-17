@@ -3,6 +3,7 @@ import {
 } from '../types/assessment';
 import type {
   Assessment,
+  CategoryAssessment,
   CreateAssessmentRequest,
   CreateAssessmentResponse,
   StartAssessmentResponse,
@@ -55,6 +56,10 @@ export const assessmentApi = {
 
   get: async (id: string): Promise<Assessment> => {
     return request<Assessment>(`/assessments/${id}`);
+  },
+
+  getCategory: async (id: string, category: CategoryType): Promise<CategoryAssessment> => {
+    return request<CategoryAssessment>(`/assessments/${id}/categories/${category}`);
   },
 
   updateCategory: async (
