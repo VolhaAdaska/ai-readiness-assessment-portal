@@ -84,7 +84,7 @@ export const Completion: React.FC = () => {
             <div className="space-y-3">
               {assessment.categories.map((category) => (
                 <div key={category.category} className="flex justify-between items-center">
-                  <span className="text-sm font-medium">{category.category}</span>
+                  <span className="text-sm font-medium">{getCategoryTypeLabel(category.category)}</span>
                   <span className="text-sm text-gray-600">{category.categoryScore}%</span>
                 </div>
               ))}

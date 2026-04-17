@@ -15,7 +15,7 @@ export const categoryTypeLabels: Record<CategoryType, string> = {
   [CategoryType.Process]: 'Process',
   [CategoryType.Security]: 'Security',
   [CategoryType.Governance]: 'Governance',
-  [CategoryType.TeamCapabilities]: 'Team Capabilities',
+  [CategoryType.TeamCapabilities]: 'Team',
 };
 
 export function isCategoryType(value: number): value is CategoryType {

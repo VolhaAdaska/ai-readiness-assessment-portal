@@ -44,17 +44,17 @@ public class CompleteInitialAssessmentCommandHandler : ICommandHandler<CompleteI
         var assessment = await _repository.GetByIdAsync(command.AssessmentId, cancellationToken)
             ?? throw new NotFoundException(nameof(Domain.InitialAssessment.BaselineAssessment), command.AssessmentId);
 
-        // Generate recommendations based on current assessment state
+        // Complete the assessment first (domain validates all categories are assessed and transitions status)
+        assessment.Complete();
+
+        // Generate recommendations now that status is Completed
         var recommendations = await _recommendationGenerator.GenerateRecommendationsAsync(assessment, cancellationToken);
 
-        // Add recommendations to assessment
+        // Add recommendations to assessment (domain requires Completed status)
         foreach (var recommendation in recommendations)
         {
             assessment.AddRecommendation(recommendation);
         }
-
-        // Complete the assessment (domain validates all categories are assessed)
-        assessment.Complete();
 
         // Persist changes
         await _repository.UpdateAsync(assessment, cancellationToken);
