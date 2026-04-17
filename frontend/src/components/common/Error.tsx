@@ -7,11 +7,11 @@ interface ErrorProps {
 
 export const Error: React.FC<ErrorProps> = ({ message, className = '' }) => {
   return (
-    <div className={`bg-red-50 border border-red-200 rounded-md p-4 ${className}`}>
+    <div className={`rounded-xl border border-red-200 bg-red-50 p-4 shadow-sm ${className}`}>
       <div className="flex">
         <div className="flex-shrink-0">
           <svg
-            className="h-5 w-5 text-red-400"
+            className="h-5 w-5 text-red-500"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -23,7 +23,7 @@ export const Error: React.FC<ErrorProps> = ({ message, className = '' }) => {
           </svg>
         </div>
         <div className="ml-3">
-          <p className="text-sm text-red-800">{message}</p>
+          <p className="text-sm font-medium text-red-800">{message}</p>
         </div>
       </div>
     </div>

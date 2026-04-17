@@ -11,8 +11,9 @@
 
   body {
     margin: 0;
-    background: #f3f4f6;
-    color: #111827;
+    background: radial-gradient(circle at 0% 0%, #f8fafc 0%, #f3f4f6 55%, #eef2f7 100%);
+    color: #0f172a;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5;
   }
 }

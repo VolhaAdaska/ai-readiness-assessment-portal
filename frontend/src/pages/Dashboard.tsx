@@ -31,9 +31,21 @@ export const Dashboard: React.FC = () => {
 
   const formatShortId = (id: string): string => id.split('-')[0] ?? id;
 
+  const statusBadgeClass = (status: AssessmentStatus): string => {
+    if (status === AssessmentStatus.Completed) {
+      return 'bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200';
+    }
+
+    if (status === AssessmentStatus.InProgress) {
+      return 'bg-indigo-50 text-indigo-700 ring-1 ring-indigo-200';
+    }
+
+    return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
+  };
+
   if (loading) {
     return (
-      <div className="py-16">
+      <div className="rounded-2xl border border-slate-200 bg-white py-20 shadow-sm">
         <Loading size="lg" />
       </div>
     );
@@ -41,9 +53,9 @@ export const Dashboard: React.FC = () => {
 
   if (error) {
     return (
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+      <div className="space-y-7">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900">Dashboard</h2>
           <Link to="/create">
             <Button>New Assessment</Button>
           </Link>
@@ -54,9 +66,12 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900">Dashboard</h2>
+    <div className="space-y-7">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h2 className="text-3xl font-semibold tracking-tight text-slate-900 sm:text-4xl">Dashboard</h2>
+          <p className="mt-1.5 text-sm text-slate-600">Track progress across active and completed assessments.</p>
+        </div>
         <Link to="/create">
           <Button>New Assessment</Button>
         </Link>
@@ -68,7 +83,7 @@ export const Dashboard: React.FC = () => {
             <CardTitle>No Assessments Yet</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">
+            <p className="mb-4 text-sm leading-6 text-slate-600">
               Start a baseline assessment to track AI readiness progress for your organization.
             </p>
             <Link to="/create">
@@ -77,63 +92,63 @@ export const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {assessments.map((assessment) => {
             const isCompleted = assessment.status === AssessmentStatus.Completed;
             const organizationName = assessment.organizationName?.trim();
 
             return (
               <Card key={assessment.assessmentId}>
-                <CardHeader className="flex flex-row items-start justify-between">
+                <CardHeader className="flex flex-row items-start justify-between gap-3">
                   <div>
-                    <CardTitle>Assessment {formatShortId(assessment.assessmentId)}</CardTitle>
-                    <p className="text-sm text-gray-500 mt-1">{assessment.assessmentId}</p>
+                    <CardTitle className="text-xl sm:text-2xl">Assessment {formatShortId(assessment.assessmentId)}</CardTitle>
+                    <p className="mt-1 text-xs font-medium uppercase tracking-wider text-slate-500">{assessment.assessmentId}</p>
                   </div>
-                  <span className="px-2 py-1 text-xs rounded bg-gray-100 text-gray-700">
+                  <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusBadgeClass(assessment.status)}`}>
                     {getAssessmentStatusLabel(assessment.status)}
                   </span>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                <CardContent className="space-y-5">
+                  <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                     <div>
-                      <p className="text-gray-500">Organization</p>
-                      <p className="font-medium text-gray-900 break-all">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Organization</p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900 break-all">
                         {organizationName || 'Organization unavailable'}
                       </p>
                       {!organizationName && (
-                        <p className="text-xs text-gray-500 break-all mt-1">ID: {assessment.organizationId}</p>
+                        <p className="mt-1 text-xs text-slate-500 break-all">ID: {assessment.organizationId}</p>
                       )}
                     </div>
                     <div>
-                      <p className="text-gray-500">Created</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Created</p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
                         {new Date(assessment.createdAt).toLocaleDateString()}
                       </p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Readiness Level</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Readiness Level</p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
                         {getDashboardReadinessLabel(assessment.readinessLevel)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-gray-500">Overall Score</p>
-                      <p className="font-medium text-gray-900">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">Overall Score</p>
+                      <p className="mt-1 text-sm font-semibold text-slate-900">
                         {assessment.overallScore === undefined ? 'N/A' : `${Math.round(assessment.overallScore)}%`}
                       </p>
                     </div>
                   </div>
 
-                  <div>
-                    <div className="flex justify-between text-sm mb-1">
-                      <span className="text-gray-600">
+                  <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
+                    <div className="mb-2 flex items-center justify-between text-sm">
+                      <span className="text-slate-600">
                         Categories: {assessment.completedCategories}/{assessment.totalCategories}
                       </span>
-                      <span className="font-medium text-gray-800">{assessment.completionPercentage}%</span>
+                      <span className="font-semibold text-slate-800">{assessment.completionPercentage}%</span>
                     </div>
-                    <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-2.5 w-full overflow-hidden rounded-full bg-slate-200">
                       <div
-                        className="h-full bg-blue-600"
+                        className="h-full rounded-full bg-indigo-600/90 transition-all duration-300"
                         style={{ width: `${assessment.completionPercentage}%` }}
                       />
                     </div>
@@ -147,7 +162,7 @@ export const Dashboard: React.FC = () => {
                           : `/assessment/${assessment.assessmentId}`
                       }
                     >
-                      <Button variant={isCompleted ? 'secondary' : 'primary'}>
+                      <Button className="w-full sm:w-auto" variant={isCompleted ? 'secondary' : 'primary'}>
                         {isCompleted ? 'View Summary' : 'Continue Assessment'}
                       </Button>
                     </Link>
