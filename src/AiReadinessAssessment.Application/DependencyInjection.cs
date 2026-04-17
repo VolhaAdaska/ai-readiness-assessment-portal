@@ -5,6 +5,7 @@ using AiReadinessAssessment.Application.InitialAssessment.Dtos.Responses;
 using AiReadinessAssessment.Application.InitialAssessment.Queries;
 using AiReadinessAssessment.Application.InitialAssessment.Queries.Handlers;
 using Microsoft.Extensions.DependencyInjection;
+using AiReadinessAssessment.Application.InitialAssessment.Services;
 
 namespace AiReadinessAssessment.Application;
 
@@ -21,6 +22,9 @@ public static class DependencyInjection
     /// <returns>The modified service collection.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        // Register services
+        services.AddScoped<IRecommendationGenerator, RecommendationGenerator>();
+
         // Register command handlers
         services.AddScoped<ICommandHandler<CreateInitialAssessmentCommand, CreateInitialAssessmentResponse>, CreateInitialAssessmentCommandHandler>();
         services.AddScoped<ICommandHandler<StartInitialAssessmentCommand, StartAssessmentResponse>, StartInitialAssessmentCommandHandler>();

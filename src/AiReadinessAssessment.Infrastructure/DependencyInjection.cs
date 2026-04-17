@@ -1,6 +1,7 @@
 using AiReadinessAssessment.Application.InitialAssessment.Services;
 using AiReadinessAssessment.Infrastructure.Persistence;
 using AiReadinessAssessment.Infrastructure.Persistence.Repositories;
+using AiReadinessAssessment.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +31,9 @@ public static class DependencyInjection
 
         // Register repositories
         services.AddScoped<IInitialAssessmentRepository, InitialAssessmentRepository>();
+
+        // Register application services
+        services.AddScoped<IRecommendationGenerator, RuleBasedRecommendationGenerator>();
 
         return services;
     }

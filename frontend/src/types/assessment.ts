@@ -62,7 +62,7 @@ export interface Assessment {
   createdAt: string;
   startedAt?: string;
   completedAt?: string;
-  overallScore?: number;
+  overallScore: number;
   readinessLevel?: ReadinessLevel;
   categories: CategoryAssessment[];
   recommendations: Recommendation[];
@@ -91,12 +91,12 @@ export interface UpdateCategoryRequest {
 }
 
 export interface UpdateCategoryResponse {
-  id: string;
+  assessmentId: string;
   category: CategoryType;
   maturityLevel: number;
   observations: string;
   categoryScore: number;
-  isComplete: boolean;
+  updatedAt: string;
 }
 
 export interface CompleteAssessmentResponse {
